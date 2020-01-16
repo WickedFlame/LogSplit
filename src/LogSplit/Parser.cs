@@ -20,23 +20,16 @@ namespace LogSplit
 
             foreach (var scan in splits)
             {
-                var separatorLength = scan.Separator != null ? scan.Separator.Length : 0;
-                var index = scan.Separator != null ? value.IndexOf(scan.Separator, StringComparison.OrdinalIgnoreCase) + separatorLength : -1;
-                if (index < 0)
+                var nextSplit = value.NextSplitIndex(scan);
+
+                if (scan.Pattern != null)
                 {
-                    index = value.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
-                }
-
-                if (scan.Placeholder != null)
-                {
-
-                    var key = scan.Placeholder.Substring(2, scan.Placeholder.Length - 3);
-
-                    items.Add(new Token(key, value.Substring(0, index - separatorLength).Trim()));
+                    var key = new TokenKey(scan.Pattern);
+                    items.Add(new Token(key, value.Substring(0, nextSplit - scan.SeparatorLength).Trim()));
                 }
 
 
-                value = value.Substring(index);
+                value = value.Substring(nextSplit);
             }
 
             return new ParserResult(items);
@@ -56,7 +49,7 @@ namespace LogSplit
                 pattern = pattern.Substring(splitlenth);
 
                 split = ScanNext(pattern);
-                if (!string.IsNullOrEmpty(split.Placeholder))
+                if (split.Pattern != null)
                 {
                     splits.Add(split);
                 }
@@ -96,23 +89,133 @@ namespace LogSplit
     {
         public static int StartIndex(this string pattern, Scan scan)
         {
-            var placeholder = scan.Placeholder ?? string.Empty;
+            var key = new TokenKey(scan.Pattern);
+            var placeholder = key.Key ?? string.Empty;
             var start = pattern.IndexOf(placeholder, StringComparison.OrdinalIgnoreCase);
             return start + placeholder.Length;
         }
+
+        public static int NextSplitIndex(this string value, Scan scan)
+        {
+            var len = 0;
+            var function = new ScanFunction(scan.Pattern);
+            if (!string.IsNullOrEmpty(function.Name))
+            {
+                switch (function.Name)
+                {
+                    case "len":
+                        len = (int) function.Evaluate();
+                        break;
+                }
+            }
+
+            var nextSplit = scan.Separator != null ? value.IndexOf(scan.Separator, len, StringComparison.OrdinalIgnoreCase) + scan.SeparatorLength : -1;
+            if (nextSplit < 0)
+            {
+                nextSplit = value.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
+            }
+
+            return nextSplit;
+        }
     }
 
-    public class Scan
+    internal class Scan
     {
-        public Scan(string placeholder, string separator)
+        public Scan(string pattern, string separator)
         {
-            Placeholder = placeholder;
             Separator = separator;
+
+            if (!string.IsNullOrEmpty(pattern))
+            {
+                Pattern = new ScanPattern(pattern);
+            }
         }
 
-        public string Separator { get; set; }
+        public string Separator { get; }
 
-        public string Placeholder { get; set; }
+        public ScanPattern Pattern { get; }
+
+        public int SeparatorLength => Separator?.Length ?? 0;
+    }
+
+    public class ScanPattern
+    {
+        public ScanPattern(string pattern)
+        {
+            Pattern = pattern;
+        }
+
+        public string Pattern { get; set; }
+    }
+
+    internal class ScanFunction
+    {
+        public ScanFunction(ScanPattern pattern)
+        {
+            if (pattern?.Pattern == null || !pattern.Pattern.Contains(":"))
+            {
+                return;
+            }
+
+            var function = pattern.Pattern.Substring(2, pattern.Pattern.Length - 3).Split(':')[1];
+
+            Name = function.Split('(')[0];
+
+            if (!function.Contains("("))
+            {
+                Parameters = new string[] {};
+                return;
+            }
+
+            var parameterString = function.Substring(Name.Length + 1, function.Length - (Name.Length + 2));
+            Parameters = parameterString.Split(',');
+
+        }
+
+        public string Name { get; }
+
+        public string[] Parameters { get; }
+
+        public object Evaluate()
+        {
+            switch (Name)
+            {
+                case "len":
+                    if (Parameters.Length < 1)
+                    {
+                        throw new InvalidOperationException("The no parameters defined in the function len. Please define the length of the string to parse");
+                    }
+
+                    return int.Parse(Parameters[0]);
+            }
+
+            return null;
+        }
+    }
+
+    public class TokenKey
+    {
+        public TokenKey(ScanPattern pattern)
+        {
+            if (pattern == null)
+            {
+                return;
+            }
+
+            Key = pattern.Pattern.Substring(2, pattern.Pattern.Length - 3);
+
+            if (Key.IndexOf(":", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Key = Key.Split(':')[0];
+            }
+        }
+
+        public string Key { get; }
+
+        public override string ToString()
+        {
+            return Key;
+        }
     }
 
     public sealed class ParserResult : ReadOnlyCollection<Token>
@@ -125,13 +228,16 @@ namespace LogSplit
 
     public sealed class Token
     {
-        public Token(string key, object value)
+        private readonly TokenKey _key;
+
+        public Token(TokenKey key, object value)
         {
-            Key = key;
+            _key = key;
             Value = value;
         }
 
-        public string Key { get; }
+        public string Key => _key.Key;
+
         public object Value { get; }
     }
 }
