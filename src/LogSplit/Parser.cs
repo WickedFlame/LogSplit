@@ -109,6 +109,11 @@ namespace LogSplit
                 }
             }
 
+            if (len > value.Length)
+            {
+                return value.Length;
+            }
+
             var nextSplit = scan.Separator != null ? value.IndexOf(scan.Separator, len, StringComparison.OrdinalIgnoreCase) + scan.SeparatorLength : -1;
             if (nextSplit < 0)
             {
@@ -183,10 +188,20 @@ namespace LogSplit
                 case "len":
                     if (Parameters.Length < 1)
                     {
-                        throw new InvalidOperationException("The no parameters defined in the function len. Please define the length of the string to parse");
+                        throw new InvalidOperationException("There are no parameters defined in the function len. Please define the length of the string to parse");
                     }
 
-                    return int.Parse(Parameters[0]);
+                    if (int.TryParse(Parameters[0], out int len))
+                    {
+                        return len;
+                    }
+
+                    if (Parameters[0] == "*")
+                    {
+                        return int.MaxValue;
+                    }
+
+                    throw new InvalidOperationException("Invalid parameters defined in the function len. Valid parameters are integers or *");
             }
 
             return null;
