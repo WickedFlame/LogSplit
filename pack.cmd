@@ -6,4 +6,4 @@ rem && call build ^
 rem && nuget pack LogSplit.Source.nuspec
 
 rem popd
-pause
+rem pause
