@@ -1,4 +1,4 @@
-﻿namespace LogSplit
+namespace $rootnamespace$.LogSplit
 {
     using System;
     using System.Collections.Generic;

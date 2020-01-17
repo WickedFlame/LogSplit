@@ -4,16 +4,29 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Christian Walpen</Authors>
     <Company>WickedFlame</Company>
+    <Title>LogSplit</Title>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
+    <!--<BuildOutputTargetFolder>App_Packages\LogSplit</BuildOutputTargetFolder>-->
     <!--https://docs.microsoft.com/en-au/nuget/reference/msbuild-targets#including-content-in-a-package-->
-    <!--<NuspecFile>PATH_TO_NUSPEC_FILE</NuspecFile>-->
+    <!--<NuspecFile>..\..\LogSplit.nuspec</NuspecFile>-->
+    <!--<NuspecProperties>version=$(Version)</NuspecProperties>-->
+    <!--<PackageVersion>1.0.0.0</PackageVersion>-->
+
+    <ContentTargetFolders>content\App_Packages\LogSplit;contentFiles\App_Packages\LogSplit</ContentTargetFolders>
+    <IncludeContentInPack>true</IncludeContentInPack>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Parser.cs" pack="true" PackagePath="content\App_Packages\LogSplit"/>
+    <!--<None Include="Parser.cs.pp" pack="true" PackagePath="contentFiles\cs\netstandard2.0\LogSplit" copyToOutput="true"/>-->
+    <!--<None Include="Parser.cs.pp" pack="true" copyToOutput="true"/>-->
+    <Content Include="Parser.cs.pp" pack="true" copyToOutput="true" />
+    <Content Include="Parser.cs" pack="true" copyToOutput="true" />
   </ItemGroup>
 
 </Project>
