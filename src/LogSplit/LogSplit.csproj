@@ -22,17 +22,19 @@
     <!--<PackageVersion>1.0.0.0</PackageVersion>-->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content\any\any\App_Packages\LogSplit;contentFiles\cs\netstandard2.0\App_Packages\LogSplit</ContentTargetFolders>
-    <IncludeContentInPack>true</IncludeContentInPack>
+    <!--<IncludeContentInPack>true</IncludeContentInPack>-->
   </PropertyGroup>
-
+  
   <ItemGroup>
     <!--<None Include="Parser.cs.pp" pack="true" PackagePath="contentFiles\cs\netstandard2.0\LogSplit" copyToOutput="true"/>-->
-    <!--<None Include="Parser.cs.pp" pack="true" copyToOutput="true"/>-->
+    <!--<Content Include="Parser.cs.pp" pack="true" copyToOutput="true" />-->
+    <!--<None Include="Parser.cs.pp" pack="true" copyToOutput="true" buildAction="compile"/>-->
+    <!--<Compile Include="Parser.cs" pack="true" copyToOutput="true" />-->
+  </ItemGroup>
 
-    <Content Include="Parser.cs.pp" pack="true" copyToOutput="true" />
-
-    <!--<Compile Include="Parser.cs.pp" pack="true" copyToOutput="true" />-->
-    <Content Include="Parser.cs" pack="true" copyToOutput="true" />
+  <ItemGroup>
+    <Compile Update="Parser.cs" pack="true" buildAction="compile" />
+    <None Include="Parser.cs.pp" pack="true" buildAction="compile"/>
   </ItemGroup>
 
 </Project>
