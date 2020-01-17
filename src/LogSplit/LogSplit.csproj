@@ -9,23 +9,29 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
+    <Description>Parse strings into objects</Description>
+    <Copyright>@WickedFlame 2020</Copyright>
+    <PackageTags>Parser, Logging, String</PackageTags>
+    <PackageProjectUrl>http://wickedflame.github.io/</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <!--<BuildOutputTargetFolder>App_Packages\LogSplit</BuildOutputTargetFolder>-->
     <!--https://docs.microsoft.com/en-au/nuget/reference/msbuild-targets#including-content-in-a-package-->
     <!--<NuspecFile>..\..\LogSplit.nuspec</NuspecFile>-->
     <!--<NuspecProperties>version=$(Version)</NuspecProperties>-->
     <!--<PackageVersion>1.0.0.0</PackageVersion>-->
-
-    <ContentTargetFolders>content\App_Packages\LogSplit;contentFiles\App_Packages\LogSplit</ContentTargetFolders>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content\any\any\App_Packages\LogSplit;contentFiles\cs\netstandard2.0\App_Packages\LogSplit</ContentTargetFolders>
     <IncludeContentInPack>true</IncludeContentInPack>
   </PropertyGroup>
 
   <ItemGroup>
     <!--<None Include="Parser.cs.pp" pack="true" PackagePath="contentFiles\cs\netstandard2.0\LogSplit" copyToOutput="true"/>-->
     <!--<None Include="Parser.cs.pp" pack="true" copyToOutput="true"/>-->
+
     <Content Include="Parser.cs.pp" pack="true" copyToOutput="true" />
+
+    <!--<Compile Include="Parser.cs.pp" pack="true" copyToOutput="true" />-->
     <Content Include="Parser.cs" pack="true" copyToOutput="true" />
   </ItemGroup>
 
