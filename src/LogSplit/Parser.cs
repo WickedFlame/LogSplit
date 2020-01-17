@@ -1,4 +1,6 @@
-﻿namespace LogSplit
+﻿using System.Linq;
+
+namespace LogSplit
 {
     using System;
     using System.Collections.Generic;
@@ -256,6 +258,11 @@
         }
 
         public IEnumerable<string> Errors { get; set; }
+
+        public object this[string key]
+        {
+            get { return this.FirstOrDefault(i => i.Key == key)?.Value; }
+        }
     }
 
     public sealed class Token
