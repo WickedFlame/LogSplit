@@ -17,6 +17,7 @@
         {
             var splits = SplitPattern(_pattern);
             var items = new List<Token>();
+            var errors = new List<string>();
 
             foreach (var scan in splits)
             {
@@ -25,6 +26,14 @@
                 if (scan.Pattern != null)
                 {
                     var key = new TokenKey(scan.Pattern);
+
+                    if (nextSplit < scan.SeparatorLength)
+                    {
+                        errors.Add($"Could not split value due to invalid pattern\n - Value: \"{value}\"\n - Invalid delimeter: \"{scan.Separator}\".\n - Preceding pattern: \"{scan.Pattern.Pattern}\"");
+                        items.Add(new Token(new TokenKey("Remaining"), value));
+                        break;
+                    }
+
                     items.Add(new Token(key, value.Substring(0, nextSplit - scan.SeparatorLength).Trim()));
                 }
 
@@ -32,7 +41,7 @@
                 value = value.Substring(nextSplit);
             }
 
-            return new ParserResult(items);
+            return new ParserResult(items, errors);
         }
 
         private IEnumerable<Scan> SplitPattern(string pattern)
@@ -210,6 +219,11 @@
 
     public class TokenKey
     {
+        public TokenKey(string key)
+        {
+            Key = key;
+        }
+
         public TokenKey(ScanPattern pattern)
         {
             if (pattern == null)
@@ -235,10 +249,13 @@
 
     public sealed class ParserResult : ReadOnlyCollection<Token>
     {
-        public ParserResult(IList<Token> items)
+        public ParserResult(IList<Token> items, IEnumerable<string> errors)
             : base(items ?? new List<Token>())
         {
+            Errors = errors;
         }
+
+        public IEnumerable<string> Errors { get; set; }
     }
 
     public sealed class Token

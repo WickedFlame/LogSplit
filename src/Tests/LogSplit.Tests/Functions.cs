@@ -11,7 +11,7 @@ namespace LogSplit.Tests
         [Test]
         public void Parser_Functions_Length()
         {
-            var str = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [Opacc.ServiceBus.Client.Common.Program.BaseServiceBusClientWinService] [Thr5] Startup delay: 3 sec remaining";
+            var str = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining";
 
             var pattern = "%{date:len(24)} %{level}";
 
