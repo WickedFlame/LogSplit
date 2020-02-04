@@ -4,7 +4,17 @@
 
 Split string lines into objects
 
-The splitting delimeters have to be identifieable
+Lies are split by providing a property with the propertyname wrapped in %{...} followed by a delimeter. 
+The delimeter in the following is the whitespace.
+```csharp
+var parser = new Parser("%{first} %{second}");
+var result = parser.Parse("Word1 Word2");
+
+result["first"].Should().Be("Word1");
+result["second"].Should().Be("Word2");
+```
+
+The splitting delimeters have to be identifieable. The line is split at the next possible delimeter
 
 ```csharp
 var parser = new Parser("%{date} [%{level}] [%{pc}] %{message:len(*)}");
@@ -35,4 +45,15 @@ var result = parser.Parse("this is a test");
 
 result.First().Should().BeEquivalentTo(new { Key = "first", Value = "this" });
 result.First().Should().BeEquivalentTo(new { Key = "rest", Value = "is a test" });
+```
+
+### Result
+Items in the Result can be accessed by an int indexer or by providing the string key in the indexer. 
+The int indexer returnes th part while the key indexer provides the value
+```csharp
+var parser = new Parser("%{date} [%{level}] [%{pc}] %{message:len(*)}");
+var result = parser.Parse("01.01.2020 [INFO] [PC-NAME] The log message");
+
+result[0].Should().BeEquivalentTo(new { Key = "date", Value = "01.01.2020" });
+result["date"].Should().Be("01.01.2020");
 ```
