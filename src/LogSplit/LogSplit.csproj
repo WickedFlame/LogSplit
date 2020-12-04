@@ -15,7 +15,7 @@
     <PackageProjectUrl>http://wickedflame.github.io/</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!--<IncludeBuildOutput>false</IncludeBuildOutput>-->
     <!--<ContentTargetFolders>content\any\any\App_Packages\LogSplit;contentFiles\cs\netstandard2.0\App_Packages\LogSplit</ContentTargetFolders>-->
   </PropertyGroup>
   
@@ -26,9 +26,9 @@
     <!--<Compile Include="Parser.cs" pack="true" copyToOutput="true" />-->
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Update="Parser.cs" pack="true" buildAction="compile" />
     <None Include="Parser.cs.pp" pack="true" buildAction="compile"/>
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>
