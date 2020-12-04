@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
+	  <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0</TargetFrameworks>
     <Authors>Christian Walpen</Authors>
     <Company>WickedFlame</Company>
     <Title>LogSplit</Title>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
+	  <PackageVersion>1.0.0-RC01</PackageVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>Parse strings into objects</Description>
     <Copyright>@WickedFlame 2020</Copyright>
