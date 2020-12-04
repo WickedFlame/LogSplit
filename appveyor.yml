@@ -2,10 +2,22 @@
 
 
 # version format
-version: 1.0.1.{build}
+version: 1.0.2.{build}
+
+environment:
+  base_version: 1.0.2
 
 # you can use {branch} name in version format too
 # version: 1.0.{build}-{branch}
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: $(base_version)-RC{build}
+  assembly_version: $(base_version)
+  file_version: '{version}'
+  informational_version: '{version}'
 
 # branches to build
 branches:
@@ -25,15 +37,6 @@ install:
   - set PATH=C:\Program Files (x86)\MSBuild\16.0\Bin;%PATH%
 #  - sudo apt-get install nunit-console
 #  - nuget restore LogSplit.sln
- 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
 
 # to add several platforms to build matrix:
 #platform:
