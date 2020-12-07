@@ -14,7 +14,9 @@
     <Description>Parse strings into objects</Description>
     <Copyright>@WickedFlame 2020</Copyright>
     <PackageTags>Parser, Logging, String</PackageTags>
-    <PackageProjectUrl>http://wickedflame.github.io/</PackageProjectUrl>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <RepositoryUrl>https://github.com/WickedFlame/LogSplit</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/WickedFlame/LogSplit</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <!--<IncludeBuildOutput>false</IncludeBuildOutput>-->
