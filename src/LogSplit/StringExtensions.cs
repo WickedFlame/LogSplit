@@ -36,7 +36,7 @@ namespace LogSplit
 			{
 				nextSplit = value.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 			}
-
+			
 			return nextSplit;
 		}
 	}

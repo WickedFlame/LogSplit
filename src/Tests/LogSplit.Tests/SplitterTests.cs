@@ -13,14 +13,10 @@ namespace LogSplit.Tests
         [Test]
         public void Parser_Splitter_WithBracketDelimeters()
         {
-            var str = @"[2020-01-14 21:15:41.4079] [INFO]  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining";
+            var result = @"[2020-01-14 21:15:41.4079] [INFO]  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining"
+	            .Parse("[%{date}] [%{level}]");
 
-            var pattern = "[%{date}] [%{level}]";
-
-            var parser = new Parser(pattern);
-            var result = parser.Parse(str);
-
-            result.Count.Should().Be(2);
+            result.Count.Should().Be(3);
 
             result[0].Should().BeEquivalentTo(new { Key = "date", Value = "2020-01-14 21:15:41.4079" });
             result[1].Should().BeEquivalentTo(new { Key = "level", Value = "INFO" });
@@ -29,14 +25,10 @@ namespace LogSplit.Tests
         [Test]
         public void Parser_Splitter_NotAtEnd()
         {
-            var str = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining";
+            var result = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining"
+	            .Parse("%{date} %{time} %{level} [%{pc}]");
 
-            var pattern = "%{date} %{time} %{level} [%{pc}]";
-
-            var parser = new Parser(pattern);
-            var result = parser.Parse(str);
-
-            result.Count.Should().Be(4);
+            result.Count.Should().Be(5);
 
             result[0].Should().BeEquivalentTo(new { Key = "date", Value = "2020-01-14" });
             result[1].Should().BeEquivalentTo(new { Key = "time", Value = "21:15:41.4079" });

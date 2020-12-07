@@ -40,7 +40,7 @@ namespace LogSplit.Tests
             var parser = new Parser(pattern);
             var result = parser.Parse(str);
 
-            result.Count.Should().Be(3);
+            result.Count.Should().Be(4);
 
             result[0].Should().BeEquivalentTo(new { Key = "date", Value = "2020-01-14" });
             result[1].Should().BeEquivalentTo(new { Key = "time", Value = "21:15:41.4079" });
@@ -72,37 +72,35 @@ namespace LogSplit.Tests
         [Test]
         public void Parser_Invalid()
         {
-            var str = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining";
+            var result = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining"
+	            .Parse("%{date:len(24)} %{level} [%{pc}] [%{user}] [%{service}] [%{client}] {%{thread}] {message:len(*)}");
 
-            var pattern = "%{date:len(24)} %{level} [%{pc}] [%{user}] [%{service}] [%{client}] {%{thread}] {message:len(*)}";
+            result.Count.Should().Be(8);
 
-            var parser = new Parser(pattern);
-            var result = parser.Parse(str);
-
-            result.Count.Should().Be(6);
-
-            result.Errors.Count().Should().Be(1);
+            result.Errors.Count().Should().Be(2);
 
             result[0].Should().BeEquivalentTo(new { Key = "date", Value = "2020-01-14 21:15:41.4079" });
             result[1].Should().BeEquivalentTo(new { Key = "level", Value = "INFO" });
             result[2].Should().BeEquivalentTo(new { Key = "pc", Value = "PC-NAME" });
             result[3].Should().BeEquivalentTo(new { Key = "user", Value = @"PC-NAME\iis.service" });
             result[4].Should().BeEquivalentTo(new { Key = "service", Value = "5640:management.tool.agent.exe" });
-            result[5].Should().BeEquivalentTo(new { Key = "Remaining", Value = "SomeClient.exe] [Thr5] Startup delay: 3 sec remaining" });
-        }
+            result[5].Should().BeEquivalentTo(new { Key = "client", Value = "SomeClient.exe" });
+            result[6].Should().BeEquivalentTo(new { Key = "thread", Value = "[Thr5" });// <- this is the entry causing errors
+            result[7].Should().BeEquivalentTo(new { Key = "Remaining", Value = "Startup delay: 3 sec remaining" });
+		}
 
         [Test]
         public void Parser_ErrorMessage()
         {
-            var str = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining";
+            var result = @"2020-01-14 21:15:41.4079 INFO  [PC-NAME] [PC-NAME\iis.service] [5640:management.tool.agent.exe] [SomeClient.exe] [Thr5] Startup delay: 3 sec remaining"
+	            .Parse("%{date:len(24)} %{level} [%{pc}] [%{user}] [%{service}] [%{client}] {%{thread}] {message:len(*)}");
 
-            var pattern = "%{date:len(24)} %{level} [%{pc}] [%{user}] [%{service}] [%{client}] {%{thread}] {message:len(*)}";
+			// the split of the previous is guiessed to be "] " instead of "] [" because the parser is tolerant to errors in lines
+            result["thread"].Should().Be("[Thr5");
 
-            var parser = new Parser(pattern);
-            var result = parser.Parse(str);
-
-            result.Errors.Count().Should().Be(1);
-            result.Errors.First().Should().Be("Could not split value due to invalid pattern\n - Value: \"SomeClient.exe] [Thr5] Startup delay: 3 sec remaining\"\n - Invalid delimeter: \"] {\".\n - Preceding pattern: \"%{client}\"");
+			result.Errors.Count().Should().Be(2);
+			result.Errors.First().Should().Be("Could not split value due to invalid pattern\n - Value: \"SomeClient.exe] [Thr5] Startup delay: 3 sec remaining\"\n - Invalid delimeter: \"] {\".\n - Preceding pattern: \"%{client}\"");
+			result.Errors.Last().Should().Be("Could not split value due to invalid pattern\n - Value: \"[Thr5] Startup delay: 3 sec remaining\"\n - Invalid delimeter: \"] {message:len(*)}\".\n - Preceding pattern: \"%{thread}\"");
         }
-    }
+	}
 }

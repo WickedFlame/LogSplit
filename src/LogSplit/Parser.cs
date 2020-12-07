@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LogSplit
 {
@@ -21,24 +22,47 @@ namespace LogSplit
             foreach (var scan in splits)
             {
                 var nextSplit = value.NextSplitIndex(scan);
+                var length = scan.SeparatorLength;
 
-                if (scan.Pattern != null)
+				if (scan.Pattern != null)
                 {
                     var key = new TokenKey(scan.Pattern);
 
                     if (nextSplit < scan.SeparatorLength)
                     {
-                        errors.Add($"Could not split value due to invalid pattern\n - Value: \"{value}\"\n - Invalid delimeter: \"{scan.Separator}\".\n - Preceding pattern: \"{scan.Pattern.Pattern}\"");
-                        items.Add(new Token(new TokenKey("Remaining"), value));
-                        break;
+	                    errors.Add($"Could not split value due to invalid pattern\n - Value: \"{value}\"\n - Invalid delimeter: \"{scan.Separator}\".\n - Preceding pattern: \"{scan.Pattern.Pattern}\"");
+
+						var subscan = scan;
+						while (nextSplit > 0)
+	                    {
+		                    subscan = new Scan(subscan.Pattern.Pattern, subscan.Separator.Substring(0, subscan.Separator.Length - 1));
+		                    nextSplit = value.NextSplitIndex(subscan);
+							length = subscan.SeparatorLength;
+							if (nextSplit >= length)
+							{
+								break;
+							}
+	                    }
+
+						if(nextSplit <= 0)
+						{
+							//errors.Add($"Could not split value due to invalid pattern\n - Value: \"{value}\"\n - Invalid delimeter: \"{scan.Separator}\".\n - Preceding pattern: \"{scan.Pattern.Pattern}\"");
+							continue;
+						}
+                        
                     }
 
-                    items.Add(new Token(key, value.Substring(0, nextSplit - scan.SeparatorLength).Trim()));
+                    items.Add(new Token(key, value.Substring(0, nextSplit - length).Trim()));
                 }
 
 
                 value = value.Substring(nextSplit);
             }
+
+            if (value.Length > 0)
+            {
+	            items.Add(new Token(new TokenKey("Remaining"), value));
+			}
 
             return new ParserResult(items, errors);
         }

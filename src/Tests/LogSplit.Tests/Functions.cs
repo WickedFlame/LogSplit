@@ -18,7 +18,7 @@ namespace LogSplit.Tests
             var parser = new Parser(pattern);
             var result = parser.Parse(str);
 
-            result.Count.Should().Be(2);
+            result.Count.Should().Be(3);
 
             result[0].Should().BeEquivalentTo(new { Key = "date", Value = "2020-01-14 21:15:41.4079" });
             result[1].Should().BeEquivalentTo(new { Key = "level", Value = "INFO" });
