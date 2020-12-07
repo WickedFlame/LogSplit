@@ -20,13 +20,6 @@
     <!--<IncludeBuildOutput>false</IncludeBuildOutput>-->
     <!--<ContentTargetFolders>content\any\any\App_Packages\LogSplit;contentFiles\cs\netstandard2.0\App_Packages\LogSplit</ContentTargetFolders>-->
   </PropertyGroup>
-  
-  <ItemGroup>
-    <!--<None Include="Parser.cs.pp" pack="true" PackagePath="contentFiles\cs\netstandard2.0\LogSplit" copyToOutput="true"/>-->
-    <!--<Content Include="Parser.cs.pp" pack="true" copyToOutput="true" />-->
-    <!--<None Include="Parser.cs.pp" pack="true" copyToOutput="true" buildAction="compile"/>-->
-    <!--<Compile Include="Parser.cs" pack="true" copyToOutput="true" />-->
-  </ItemGroup>
 
   <!--<ItemGroup>
     <Compile Update="Parser.cs" pack="true" buildAction="compile" />

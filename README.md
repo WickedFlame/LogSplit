@@ -13,6 +13,14 @@ var result = parser.Parse("Word1 Word2");
 result["first"].Should().Be("Word1");
 result["second"].Should().Be("Word2");
 ```
+Map to a Type
+```csharp
+var parser = new Parser("%{first} %{second}");
+var result = parser.Parse<WordType>("Word1 Word2");
+
+result.First.Should().Be("Word1");
+result.Second.Should().Be("Word2");
+```
 
 The splitting delimeters have to be identifieable. The line is split at the next possible delimeter
 
@@ -24,6 +32,13 @@ result[0].Should().BeEquivalentTo(new { Key = "date", Value = "01.01.2020" });
 result[1].Should().BeEquivalentTo(new { Key = "level", Value = "INFO" });
 result[2].Should().BeEquivalentTo(new { Key = "pc", Value = "PC-NAME" });
 result[3].Should().BeEquivalentTo(new { Key = "message", Value = "The log message" });
+```
+
+String extensions
+```csharp
+var result = "01.01.2020 [INFO] [PC-NAME] The log message".Parse("%{date} [%{level}] [%{pc}] %{message:len(*)}");
+
+var logItem = "01.01.2020 [INFO] [PC-NAME] The log message".Parse<LogItem>("%{Date} [%{Level}] [%{Pc}] %{Message:len(*)}");
 ```
 
 ### Functions

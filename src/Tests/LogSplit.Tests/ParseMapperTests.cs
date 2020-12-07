@@ -6,18 +6,10 @@ using NUnit.Framework;
 
 namespace LogSplit.Tests
 {
-	public class ParserExtensionsTests
+	public class ParseMapperTests
 	{
 		[Test]
-		public void ParserExtensions_ParseLog()
-		{
-			var result = "01.01.2020 [INFO] [PC-NAME] The log message".Parse("%{date} [%{level}] [%{pc}] %{message:len(*)}");
-			result[0].Should().BeEquivalentTo(new { Key = "date", Value = "01.01.2020" });
-			result["date"].Should().Be("01.01.2020");
-		}
-
-		[Test]
-		public void ParserExtensions_ParseMapped()
+		public void Parser_Map()
 		{
 			var parser = new Parser("%{Date} [%{Level}] [%{PC}] %{Message:len(*)}");
 			var result = parser.Parse<LogEntry>("01.01.2020 [INFO] [PC-NAME] The log message");
@@ -28,10 +20,9 @@ namespace LogSplit.Tests
 		}
 
 		[Test]
-		public void ParserExtensions_ParseMapped_Caseing()
+		public void ParseMapper_StringExtension()
 		{
-			var parser = new Parser("%{date} [%{level}] [%{pc}] %{message:len(*)}");
-			var result = parser.Parse<LogEntry>("01.01.2020 [INFO] [PC-NAME] The log message");
+			var result = "01.01.2020 [INFO] [PC-NAME] The log message".Parse<LogEntry>("%{Date} [%{Level}] [%{PC}] %{Message:len(*)}");
 			result.Date.ToString().Should().Be(DateTime.Parse("01.01.2020").ToString());
 			result.Level.Should().Be("INFO");
 			result.Pc.Should().Be("PC-NAME");
