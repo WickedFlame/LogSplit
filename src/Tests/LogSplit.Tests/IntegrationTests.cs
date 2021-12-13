@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace LogSplit.Tests
@@ -54,11 +55,20 @@ namespace LogSplit.Tests
 
 			Assert.AreEqual(4, result.Errors.Count());
 		}
+
 		[Test]
 		public void Integration_ParseToType_DatePattern_NotMet()
 		{
 			Assert.DoesNotThrow(() => "This is the message".Parse<ParseToType>("%{Date} [%{Type}] [%{Severity}] %{Message:len(*)}"));
 		}
+
+		[Test]
+		public void Integration_ParseToType_MoveDataToNext()
+		{
+			"This is the message".Parse<ParseToType>("%{Date} [%{Type}] [%{Severity}] %{Message:len(*)}")
+				.Message.Should().Be("This is the message");
+		}
+
 		public class ParseToType
         {
             public DateTime Date { get; set; }

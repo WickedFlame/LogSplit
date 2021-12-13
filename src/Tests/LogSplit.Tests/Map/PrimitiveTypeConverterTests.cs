@@ -10,7 +10,7 @@ namespace LogSplit.Tests.Map
 	{
 		private T Map<T>(string value)
 		{
-			return (T)PrimitiveTypeConverter.Convert(typeof(T), value);
+			return (T)PrimitiveTypeConverter.Convert(typeof(T), value).Value;
 		}
 
 		[Test]

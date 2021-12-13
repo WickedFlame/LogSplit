@@ -46,13 +46,12 @@ namespace LogSplit
 
 						if(nextSplit <= 0)
 						{
-							//errors.Add($"Could not split value due to invalid pattern\n - Value: \"{value}\"\n - Invalid delimeter: \"{scan.Separator}\".\n - Preceding pattern: \"{scan.Pattern.Pattern}\"");
 							continue;
 						}
                         
                     }
 
-                    items.Add(new Token(key, value.Substring(0, nextSplit - length).Trim()));
+                    items.Add(new Token(key, value.Substring(0, nextSplit == value.Length ? nextSplit : nextSplit - length), value.Substring(0, nextSplit)));
                 }
 
 
