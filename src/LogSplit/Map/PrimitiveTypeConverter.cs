@@ -77,7 +77,9 @@ namespace LogSplit.Map
 					return date;
 				}
 
-				throw new FormatException($"Value {value} could not be parsed to {type.FullName}. DateTimes have to be in the ISO-8601 format eg. yyyy-MM-dd");
+				//TODO: Log this
+				//throw new FormatException($"Value {value} could not be parsed to {type.FullName}. DateTimes have to be in the ISO-8601 format eg. yyyy-MM-dd");
+				return null;
 			}
 
 			if (type == typeof(Guid))
