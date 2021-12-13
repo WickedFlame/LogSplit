@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LogSplit
 {
+    /// <summary>
+    /// A parser that separates a string based on the pattern provided
+    /// </summary>
     public class Parser
     {
         private readonly string _pattern;
 
+        /// <summary>
+        /// Creates a new parser that uses the pattern to split a string
+        /// </summary>
+        /// <param name="pattern"></param>
         public Parser(string pattern)
         {
             _pattern = pattern;
         }
 
+        /// <summary>
+        /// Parse the string based on the pattern
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public ParserResult Parse(string value)
         {
             var splits = SplitPattern(_pattern);
