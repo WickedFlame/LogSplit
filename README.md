@@ -1,6 +1,8 @@
 # LogSplit
-[![Build Status](https://travis-ci.org/WickedFlame/LogSplit.svg?branch=master)](https://travis-ci.org/WickedFlame/LogSplit)
-[![Build status](https://ci.appveyor.com/api/projects/status/5xsg81nvy8xwval0?svg=true)](https://ci.appveyor.com/project/chriswalpen/logsplit)
+[![Build status](https://img.shields.io/appveyor/build/chriswalpen/LogSplit/master?label=Master&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/chriswalpen/LogSplit/branch/master)
+[![Build status](https://img.shields.io/appveyor/build/chriswalpen/LogSplit/dev?label=Dev&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/chriswalpen/LogSplit/branch/dev)
+[![NuGet Version](https://img.shields.io/nuget/v/LogSplit.svg?style=for-the-badge&label=Latest)](https://www.nuget.org/packages/LogSplit/)
+[![NuGet Version](https://img.shields.io/nuget/vpre/LogSplit.svg?style=for-the-badge&label=RC)](https://www.nuget.org/packages/LogSplit/)
 
 Split string lines into objects
 
